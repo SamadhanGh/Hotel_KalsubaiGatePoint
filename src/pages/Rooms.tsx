@@ -12,11 +12,12 @@ import {
   User,
   Mail,
   Phone,
-  MessageSquare
+  MessageSquare,
+  CreditCard
 } from 'lucide-react';
-import { Room, CreateBooking } from '../types/room';
+import { Room, CreateBooking, Booking } from '../types/room';
 import { roomApi } from '../utils/roomApi';
-import { paymentApi } from '../utils/paymentApi';
+import PaymentModal from '../components/PaymentModal';
 import toast from 'react-hot-toast';
 import { format, differenceInDays } from 'date-fns';
 
@@ -26,7 +27,9 @@ const Rooms = () => {
   const [loading, setLoading] = useState(true);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
   const [showBookingModal, setShowBookingModal] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [bookingLoading, setBookingLoading] = useState(false);
+  const [currentBooking, setCurrentBooking] = useState<Booking | null>(null);
 
   const [bookingData, setBookingData] = useState<CreateBooking>({
     roomId: 0,
@@ -90,35 +93,24 @@ const Rooms = () => {
 
       // Create booking
       const booking = await roomApi.createBooking(bookingData);
+      setCurrentBooking(booking);
       
-      // Process payment
-      const paymentOptions = {
-        amount: calculateTotal(),
-        currency: 'INR',
-        orderId: `order_${booking.id}`,
-        bookingId: booking.id,
-        customerDetails: {
-          name: bookingData.guestName,
-          email: bookingData.guestEmail,
-          phone: bookingData.guestPhone
-        }
-      };
-
-      const paymentResult = await paymentApi.processPayment(paymentOptions);
+      // Close booking modal and open payment modal
+      setShowBookingModal(false);
+      setShowPaymentModal(true);
       
-      if (paymentResult.success) {
-        await roomApi.updatePaymentStatus(booking.id, 'paid', paymentResult.paymentId);
-        toast.success(t('rooms.booking.booking_success'));
-        resetBookingForm();
-      } else {
-        toast.error(paymentResult.error || t('rooms.booking.booking_error'));
-      }
+      toast.success('Booking created! Please complete payment.');
     } catch (error) {
       console.error('Error creating booking:', error);
       toast.error(t('rooms.booking.booking_error'));
     } finally {
       setBookingLoading(false);
     }
+  };
+
+  const handlePaymentSuccess = (paymentId: string) => {
+    toast.success('Payment successful! Booking confirmed.');
+    resetBookingForm();
   };
 
   const resetBookingForm = () => {
@@ -132,7 +124,9 @@ const Rooms = () => {
       specialRequests: ''
     });
     setSelectedRoom(null);
+    setCurrentBooking(null);
     setShowBookingModal(false);
+    setShowPaymentModal(false);
   };
 
   const BookingModal = () => (
@@ -292,15 +286,18 @@ const Rooms = () => {
                 disabled={bookingLoading || calculateTotal() === 0}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-4 px-6 rounded-xl font-semibold hover:from-amber-600 hover:to-orange-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-4 px-6 rounded-xl font-semibold hover:from-amber-600 hover:to-orange-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
               >
                 {bookingLoading ? (
                   <div className="flex items-center justify-center space-x-2">
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                    <span>Processing...</span>
+                    <span>Creating Booking...</span>
                   </div>
                 ) : (
-                  t('rooms.booking.proceed_payment')
+                  <>
+                    <CreditCard className="h-5 w-5" />
+                    <span>{t('rooms.booking.proceed_payment')}</span>
+                  </>
                 )}
               </motion.button>
             </form>
@@ -434,6 +431,15 @@ const Rooms = () => {
       </div>
 
       <BookingModal />
+      
+      {currentBooking && (
+        <PaymentModal
+          isOpen={showPaymentModal}
+          onClose={() => setShowPaymentModal(false)}
+          booking={currentBooking}
+          onPaymentSuccess={handlePaymentSuccess}
+        />
+      )}
     </motion.div>
   );
 };
