@@ -1,19 +1,24 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { Menu, X, Mountain } from 'lucide-react';
+import LanguageSelector from './LanguageSelector';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { t } = useTranslation();
 
   const navItems = [
-    { name: 'Home', path: '/' },
-    { name: 'Menu', path: '/menu' },
-    { name: 'Gallery', path: '/gallery' },
-    { name: 'Facilities', path: '/facilities' },
-    { name: 'Blog', path: '/blog' },
-    { name: 'Contact', path: '/contact' },
+    { name: t('nav.home'), path: '/' },
+    { name: t('nav.menu'), path: '/menu' },
+    { name: t('nav.gallery'), path: '/gallery' },
+    { name: t('nav.facilities'), path: '/facilities' },
+    { name: t('nav.rooms'), path: '/rooms' },
+    { name: 'Reviews', path: '/reviews' },
+    { name: t('nav.blog'), path: '/blog' },
+    { name: t('nav.contact'), path: '/contact' },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -31,7 +36,7 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-6">
             {navItems.map((item) => (
               <Link
                 key={item.name}
@@ -45,16 +50,18 @@ const Navbar = () => {
                 {item.name}
               </Link>
             ))}
+            <LanguageSelector />
             <Link
               to="/admin/login"
               className="bg-amber-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-amber-700 transition-colors"
             >
-              Admin
+              {t('nav.admin')}
             </Link>
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center space-x-4">
+            <LanguageSelector />
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="text-gray-700 hover:text-amber-600 focus:outline-none focus:text-amber-600"
@@ -94,7 +101,7 @@ const Navbar = () => {
                 onClick={() => setIsOpen(false)}
                 className="block px-3 py-2 rounded-md text-base font-medium bg-amber-600 text-white hover:bg-amber-700 transition-colors"
               >
-                Admin Login
+                {t('nav.admin')}
               </Link>
             </div>
           </motion.div>

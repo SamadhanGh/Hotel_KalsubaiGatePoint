@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { 
   LogOut, 
   Settings, 
@@ -13,15 +14,23 @@ import {
   Lock,
   Crown,
   X,
-  FileText
+  FileText,
+  Calendar,
+  BarChart3
 } from 'lucide-react';
 import BlogManager from '../../components/admin/BlogManager';
 import MenuManager from '../../components/admin/MenuManager';
+import RoomManager from '../../components/admin/RoomManager';
+import BookingManager from '../../components/admin/BookingManager';
+import ReviewsManager from '../../components/admin/ReviewsManager';
+import AnalyticsManager from '../../components/admin/AnalyticsManager';
+import BookingCalendar from '../../components/admin/BookingCalendar';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [showProModal, setShowProModal] = useState(false);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem('isAdminLoggedIn');
@@ -111,13 +120,15 @@ const AdminDashboard = () => {
   );
 
   const menuItems = [
-    { id: 'overview', name: 'Overview', icon: <Settings className="h-5 w-5" /> },
+    { id: 'overview', name: t('admin.dashboard'), icon: <Settings className="h-5 w-5" /> },
+    { id: 'rooms', name: t('admin.rooms_management'), icon: <Bed className="h-5 w-5" /> },
+    { id: 'bookings', name: t('admin.bookings_management'), icon: <Calendar className="h-5 w-5" /> },
     { id: 'menu', name: 'Menu Management', icon: <Utensils className="h-5 w-5" /> },
     { id: 'gallery', name: 'Gallery Management', icon: <Camera className="h-5 w-5" /> },
     { id: 'blog', name: 'Blog Manager', icon: <FileText className="h-5 w-5" /> },
-    { id: 'rooms', name: 'Room Booking', icon: <Bed className="h-5 w-5" />, locked: true },
-    { id: 'payments', name: 'Payment Settings', icon: <CreditCard className="h-5 w-5" />, locked: true },
-    { id: 'reviews', name: 'Reviews Management', icon: <Star className="h-5 w-5" />, locked: true },
+    { id: 'reviews', name: t('admin.reviews_management'), icon: <Star className="h-5 w-5" /> },
+    { id: 'analytics', name: t('admin.analytics'), icon: <BarChart3 className="h-5 w-5" /> },
+    { id: 'calendar', name: t('admin.calendar'), icon: <Calendar className="h-5 w-5" /> },
   ];
 
   const renderContent = () => {
@@ -128,9 +139,9 @@ const AdminDashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
                 { title: 'Total Bookings', value: '127', icon: Bed, color: 'from-blue-500 to-blue-600' },
+                { title: 'Total Rooms', value: '12', icon: Bed, color: 'from-purple-500 to-purple-600' },
                 { title: 'Menu Items', value: '45', icon: Utensils, color: 'from-green-500 to-green-600' },
-                { title: 'Gallery Images', value: '89', icon: Camera, color: 'from-purple-500 to-purple-600' },
-                { title: 'Blog Posts', value: '12', icon: FileText, color: 'from-amber-500 to-amber-600' }
+                { title: 'Gallery Images', value: '89', icon: Camera, color: 'from-amber-500 to-amber-600' }
               ].map((stat, index) => (
                 <motion.div
                   key={index}
@@ -167,9 +178,9 @@ const AdminDashboard = () => {
               <h3 className="text-2xl font-bold text-gray-800 mb-6">Quick Actions</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {[
-                  { title: 'Add Menu Item', desc: 'Add new dishes to your menu', action: () => setActiveTab('menu') },
-                  { title: 'Upload Photos', desc: 'Add new images to gallery', action: () => setActiveTab('gallery') },
-                  { title: 'Write Blog Post', desc: 'Create new blog content', action: () => setActiveTab('blog') }
+                  { title: 'Add Room', desc: 'Add new room to inventory', action: () => setActiveTab('rooms') },
+                  { title: 'View Bookings', desc: 'Manage room bookings', action: () => setActiveTab('bookings') },
+                  { title: 'Analytics', desc: 'View reports and analytics', action: () => setActiveTab('analytics') }
                 ].map((action, index) => (
                   <motion.button
                     key={index}
@@ -186,6 +197,12 @@ const AdminDashboard = () => {
             </motion.div>
           </div>
         );
+      
+      case 'rooms':
+        return <RoomManager />;
+      
+      case 'bookings':
+        return <BookingManager />;
       
       case 'menu':
         return <MenuManager />;
@@ -227,6 +244,15 @@ const AdminDashboard = () => {
 
       case 'blog':
         return <BlogManager />;
+
+      case 'reviews':
+        return <ReviewsManager />;
+
+      case 'analytics':
+        return <AnalyticsManager />;
+
+      case 'calendar':
+        return <BookingCalendar />;
       
       default:
         return (
@@ -274,7 +300,7 @@ const AdminDashboard = () => {
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-3xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
-                Admin Dashboard
+                {t('admin.dashboard')}
               </h1>
               <p className="text-gray-600 mt-1">Hotel Kalsubai Gate Point</p>
             </div>
@@ -303,13 +329,7 @@ const AdminDashboard = () => {
                 {menuItems.map((item, index) => (
                   <motion.button
                     key={item.id}
-                    onClick={() => {
-                      if (item.locked) {
-                        setShowProModal(true);
-                      } else {
-                        setActiveTab(item.id);
-                      }
-                    }}
+                    onClick={() => setActiveTab(item.id)}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
@@ -318,11 +338,10 @@ const AdminDashboard = () => {
                       activeTab === item.id
                         ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg'
                         : 'text-gray-600 hover:bg-gray-100'
-                    } ${item.locked ? 'opacity-75' : ''}`}
+                    }`}
                   >
                     <span className={activeTab === item.id ? 'text-white' : ''}>{item.icon}</span>
                     <span className="flex-1 text-left font-medium">{item.name}</span>
-                    {item.locked && <Lock className="h-4 w-4 text-gray-400" />}
                   </motion.button>
                 ))}
               </nav>

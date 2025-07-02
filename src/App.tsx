@@ -9,6 +9,8 @@ import Facilities from './pages/Facilities';
 import Contact from './pages/Contact';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
+import Rooms from './pages/Rooms';
+import Reviews from './pages/Reviews';
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import WhatsAppFloat from './components/WhatsAppFloat';
@@ -27,6 +29,8 @@ function App() {
             <Route path="/menu" element={<Menu />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/facilities" element={<Facilities />} />
+            <Route path="/rooms" element={<Rooms />} />
+            <Route path="/reviews" element={<Reviews />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:id" element={<BlogPost />} />

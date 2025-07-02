@@ -1,0 +1,144 @@
+{
+  "nav": {
+    "home": "Home",
+    "menu": "Menu",
+    "gallery": "Gallery",
+    "facilities": "Facilities",
+    "rooms": "Rooms",
+    "blog": "Blog",
+    "contact": "Contact",
+    "admin": "Admin"
+  },
+  "common": {
+    "loading": "Loading...",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "book_now": "Book Now",
+    "contact_us": "Contact Us",
+    "read_more": "Read More",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "price": "Price",
+    "rating": "Rating",
+    "reviews": "Reviews",
+    "amenities": "Amenities"
+  },
+  "home": {
+    "hero_title": "Hotel Kalsubai Gate Point",
+    "hero_subtitle": "Your Gateway to Maharashtra's Highest Peak",
+    "hero_tagline": "Where Adventure Meets Magic",
+    "explore_menu": "Explore Menu",
+    "book_stay": "Book Your Stay",
+    "about_title": "About Our Magical Retreat",
+    "about_description": "Nestled at the base of Kalsubai Peak, Maharashtra's highest summit, our enchanted hotel offers the perfect fusion of comfort and adventure.",
+    "features": {
+      "rooms": {
+        "title": "Magical Rooms",
+        "description": "Enchanted accommodations with breathtaking mountain views"
+      },
+      "cuisine": {
+        "title": "Mystical Cuisine",
+        "description": "Authentic local flavors that transport your taste buds"
+      },
+      "views": {
+        "title": "Scenic Wonders",
+        "description": "Spectacular views of Kalsubai Peak and beyond"
+      },
+      "groups": {
+        "title": "Adventure Groups",
+        "description": "Perfect sanctuary for families and fellow explorers"
+      }
+    },
+    "stats": {
+      "rooms": "Magical Rooms",
+      "dishes": "Delicious Dishes",
+      "guests": "Happy Adventurers",
+      "rating": "Star Rating"
+    }
+  },
+  "rooms": {
+    "title": "Our Magical Rooms",
+    "subtitle": "Choose from our enchanted accommodations",
+    "book_room": "Book This Room",
+    "per_night": "per night",
+    "max_occupancy": "Max Occupancy",
+    "room_types": {
+      "standard": "Standard Room",
+      "deluxe": "Deluxe Room",
+      "suite": "Suite"
+    },
+    "booking": {
+      "title": "Book Your Stay",
+      "guest_details": "Guest Details",
+      "guest_name": "Full Name",
+      "guest_email": "Email Address",
+      "guest_phone": "Phone Number",
+      "check_in": "Check-in Date",
+      "check_out": "Check-out Date",
+      "special_requests": "Special Requests",
+      "total_amount": "Total Amount",
+      "nights": "nights",
+      "proceed_payment": "Proceed to Payment",
+      "booking_success": "Booking Successful!",
+      "booking_error": "Booking Failed. Please try again."
+    }
+  },
+  "reviews": {
+    "title": "Guest Reviews",
+    "subtitle": "What our guests say about us",
+    "write_review": "Write a Review",
+    "your_name": "Your Name",
+    "your_email": "Your Email (Optional)",
+    "your_rating": "Your Rating",
+    "your_comment": "Your Review",
+    "submit_review": "Submit Review",
+    "review_success": "Thank you for your review!",
+    "no_reviews": "No reviews yet. Be the first to share your experience!"
+  },
+  "admin": {
+    "dashboard": "Admin Dashboard",
+    "rooms_management": "Room Management",
+    "bookings_management": "Booking Management",
+    "reviews_management": "Reviews Management",
+    "analytics": "Analytics & Reports",
+    "calendar": "Booking Calendar",
+    "add_room": "Add New Room",
+    "edit_room": "Edit Room",
+    "room_name": "Room Name",
+    "room_type": "Room Type",
+    "room_description": "Description",
+    "price_per_night": "Price per Night",
+    "max_occupancy": "Max Occupancy",
+    "room_amenities": "Amenities",
+    "room_images": "Room Images",
+    "booking_status": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "cancelled": "Cancelled",
+      "completed": "Completed"
+    },
+    "payment_status": {
+      "pending": "Pending",
+      "paid": "Paid",
+      "failed": "Failed",
+      "refunded": "Refunded"
+    }
+  },
+  "footer": {
+    "hotel_info": "Experience the beauty of Kalsubai Peak with our comfortable accommodation and delicious food.",
+    "contact_info": "Contact Info",
+    "quick_links": "Quick Links",
+    "opening_hours": "Opening Hours",
+    "24_7_open": "24/7 Open",
+    "restaurant_hours": "Restaurant: 6:00 AM - 10:00 PM",
+    "copyright": "© 2024 Hotel Kalsubai Gate Point. All rights reserved."
+  }
+}
