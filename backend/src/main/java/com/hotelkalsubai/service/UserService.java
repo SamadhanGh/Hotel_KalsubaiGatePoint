@@ -18,8 +18,9 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public User createUser(String username, String email, String password, Set<User.Role> roles) {
+    public User createUser(String username, String email, String password, String phoneNumber, Set<User.Role> roles) {
         User user = new User(username, email, passwordEncoder.encode(password));
+        user.setPhoneNumber(phoneNumber);
         user.setRoles(roles);
         return userRepository.save(user);
     }

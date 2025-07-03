@@ -16,16 +16,23 @@ import {
   MapPin,
   ChevronDown,
   Compass,
-  Gift
+  Gift,
+  User,
+  LogOut
 } from 'lucide-react';
 import LanguageSelector from './LanguageSelector';
+import AuthModal from './auth/AuthModal';
+import { useAuth } from './auth/AuthProvider';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showExploreDropdown, setShowExploreDropdown] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
   const location = useLocation();
   const { t } = useTranslation();
+  const { user, isAuthenticated, isAdmin, login, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -91,6 +98,16 @@ const Navbar = () => {
   ];
 
   const isActive = (path: string) => location.pathname === path;
+
+  const handleAuthSuccess = (userData: any) => {
+    login(userData);
+    setShowAuthModal(false);
+  };
+
+  const handleLogout = () => {
+    logout();
+    setShowUserDropdown(false);
+  };
 
   return (
     <>
@@ -259,18 +276,69 @@ const Navbar = () => {
                 </div>
               </motion.div>
 
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="hidden md:block"
-              >
-                <Link
-                  to="/admin/login"
-                  className="bg-gradient-to-r from-amber-500 to-orange-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:from-amber-600 hover:to-orange-700 transition-all shadow-lg hover:shadow-xl"
+              {/* Auth Section */}
+              {isAuthenticated ? (
+                <div className="relative">
+                  <motion.button
+                    onClick={() => setShowUserDropdown(!showUserDropdown)}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex items-center space-x-2 bg-gradient-to-r from-amber-500 to-orange-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:from-amber-600 hover:to-orange-700 transition-all shadow-lg"
+                  >
+                    <User className="h-4 w-4" />
+                    <span className="hidden md:block">{user?.username}</span>
+                    <ChevronDown className="h-4 w-4" />
+                  </motion.button>
+
+                  <AnimatePresence>
+                    {showUserDropdown && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                        className="absolute top-full right-0 mt-2 w-48 bg-white/95 backdrop-blur-xl rounded-xl shadow-xl border border-white/20 py-2 z-50"
+                      >
+                        <div className="px-4 py-2 border-b border-gray-200">
+                          <p className="text-sm font-medium text-gray-800">{user?.username}</p>
+                          <p className="text-xs text-gray-500">{user?.email}</p>
+                        </div>
+                        
+                        {isAdmin && (
+                          <Link
+                            to="/admin/dashboard"
+                            className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 hover:bg-amber-50 transition-colors"
+                            onClick={() => setShowUserDropdown(false)}
+                          >
+                            <User className="h-4 w-4" />
+                            <span>Admin Dashboard</span>
+                          </Link>
+                        )}
+                        
+                        <button
+                          onClick={handleLogout}
+                          className="flex items-center space-x-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                        >
+                          <LogOut className="h-4 w-4" />
+                          <span>Sign Out</span>
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="hidden md:block"
                 >
-                  {t('nav.admin')}
-                </Link>
-              </motion.div>
+                  <button
+                    onClick={() => setShowAuthModal(true)}
+                    className="bg-gradient-to-r from-amber-500 to-orange-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:from-amber-600 hover:to-orange-700 transition-all shadow-lg hover:shadow-xl"
+                  >
+                    Sign In / Sign Up
+                  </button>
+                </motion.div>
+              )}
 
               {/* Mobile menu button */}
               <div className="lg:hidden">
@@ -330,20 +398,26 @@ const Navbar = () => {
                   </motion.div>
                 ))}
                 
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: (navItems.length + exploreItems.length) * 0.1 }}
-                  className="pt-4 border-t border-gray-200"
-                >
-                  <Link
-                    to="/admin/login"
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center justify-center space-x-2 bg-gradient-to-r from-amber-500 to-orange-600 text-white px-4 py-3 rounded-xl font-medium hover:from-amber-600 hover:to-orange-700 transition-all shadow-lg"
+                {/* Mobile Auth Section */}
+                {!isAuthenticated && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: (navItems.length + exploreItems.length) * 0.1 }}
+                    className="pt-4 border-t border-gray-200"
                   >
-                    <span>{t('nav.admin')}</span>
-                  </Link>
-                </motion.div>
+                    <button
+                      onClick={() => {
+                        setShowAuthModal(true);
+                        setIsOpen(false);
+                      }}
+                      className="flex items-center justify-center space-x-2 w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white px-4 py-3 rounded-xl font-medium hover:from-amber-600 hover:to-orange-700 transition-all shadow-lg"
+                    >
+                      <User className="h-4 w-4" />
+                      <span>Sign In / Sign Up</span>
+                    </button>
+                  </motion.div>
+                )}
               </div>
             </motion.div>
           )}
@@ -352,6 +426,13 @@ const Navbar = () => {
 
       {/* Spacer to prevent content from hiding behind fixed navbar */}
       <div className="h-16"></div>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onSuccess={handleAuthSuccess}
+      />
     </>
   );
 };

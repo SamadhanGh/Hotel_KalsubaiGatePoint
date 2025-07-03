@@ -18,14 +18,11 @@ public class SignupRequest {
     @Size(min = 6, max = 40)
     private String password;
 
+    private String phoneNumber;
+    private String userType; // "user" or "admin"
+
     // Constructors
     public SignupRequest() {}
-
-    public SignupRequest(String username, String email, String password) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-    }
 
     // Getters and Setters
     public String getUsername() { return username; }
@@ -36,4 +33,10 @@ public class SignupRequest {
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+
+    public String getPhoneNumber() { return phoneNumber; }
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+
+    public String getUserType() { return userType; }
+    public void setUserType(String userType) { this.userType = userType; }
 }
