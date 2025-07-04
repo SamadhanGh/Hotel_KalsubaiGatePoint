@@ -173,5 +173,3 @@ export const authApiService = {
 };
 
 export { authApiService as authApi };
-
-export { authApi }
