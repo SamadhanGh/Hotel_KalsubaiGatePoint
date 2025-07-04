@@ -20,13 +20,17 @@ import {
   UserPlus
 } from 'lucide-react';
 import LanguageSelector from './LanguageSelector';
+import AuthModal from './auth/AuthModal';
+import { useAuth } from './auth/AuthProvider';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showExploreDropdown, setShowExploreDropdown] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const location = useLocation();
   const { t } = useTranslation();
+  const { login } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -92,6 +96,15 @@ const Navbar = () => {
   ];
 
   const isActive = (path: string) => location.pathname === path;
+
+  const handleAuthSuccess = (userData: any) => {
+    login(userData);
+    setShowAuthModal(false);
+  };
+
+  const handleSignUpClick = () => {
+    setShowAuthModal(true);
+  };
 
   return (
     <>
@@ -266,7 +279,10 @@ const Navbar = () => {
                 whileTap={{ scale: 0.95 }}
                 className="hidden md:block"
               >
-                <button className="group relative bg-gradient-to-r from-amber-500 to-orange-600 text-white px-6 py-2 rounded-xl text-sm font-medium hover:from-amber-600 hover:to-orange-700 transition-all shadow-lg hover:shadow-xl overflow-hidden">
+                <button 
+                  onClick={handleSignUpClick}
+                  className="group relative bg-gradient-to-r from-amber-500 to-orange-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:from-amber-600 hover:to-orange-700 transition-all shadow-lg hover:shadow-xl overflow-hidden"
+                >
                   <div className="flex items-center space-x-2 relative z-10">
                     <motion.div
                       whileHover={{ rotate: 360 }}
@@ -366,7 +382,10 @@ const Navbar = () => {
                   className="pt-4 border-t border-gray-200"
                 >
                   <button
-                    onClick={() => setIsOpen(false)}
+                    onClick={() => {
+                      setIsOpen(false);
+                      handleSignUpClick();
+                    }}
                     className="flex items-center justify-center space-x-2 w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white px-4 py-3 rounded-xl font-medium hover:from-amber-600 hover:to-orange-700 transition-all shadow-lg"
                   >
                     <UserPlus className="h-4 w-4" />
@@ -381,6 +400,13 @@ const Navbar = () => {
 
       {/* Spacer to prevent content from hiding behind fixed navbar */}
       <div className="h-16"></div>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onSuccess={handleAuthSuccess}
+      />
     </>
   );
 };
